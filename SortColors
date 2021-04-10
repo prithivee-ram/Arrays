@@ -1,0 +1,188 @@
+
+SORT COLORS BY FREQUENCY
+------------------------
+public void sortColors(int[] nums) {
+        
+        int zp = 0;
+        int op = 0;
+        int tp = 0;
+        
+        for(int i = 0; i < nums.length; i++)
+        {
+            if(nums[i] == 0)
+            {
+                nums[tp++] = 2;
+                nums[op++] = 1;
+                nums[zp++] = 0;
+            }
+            else if(nums[i] == 1)
+            {
+                nums[tp++] = 2;
+                nums[op++] = 1;
+            }
+            else if(nums[i] == 2)
+            {
+                nums[tp++] = 2;
+            }
+        }
+    }
+ 
+ 
+SORT CHARACTERS BY FREQUENCY
+----------------------------
+public String frequencySort(String s) {
+     
+        StringBuilder resString = new StringBuilder();
+        
+        //Map -> character and count
+        HashMap<Character, Integer> map = new HashMap<>();
+        
+        //Update map
+        for(char c : s.toCharArray())
+        {
+            map.put(c, map.getOrDefault(c, 0) + 1);
+        }
+        
+        //PriorityQueue
+        PriorityQueue<Character> pq = new PriorityQueue<Character>((c1, c2) -> map.get(c2) - map.get(c1));
+        
+        //Update queue with char from map not from the input string
+        for(char c : map.keySet())
+            pq.offer(c);
+        
+        //Build result string
+        while(!pq.isEmpty())
+        {
+            char curr = pq.poll();
+            int currCount = map.get(curr);
+            for(int i = 0; i < currCount; i++)
+                resString.append(curr);
+        }
+        
+        return resString.toString();
+    }
+    
+    
+TOP K FREQ ELEMENTS
+-------------------
+
+public int[] topKFrequent(int[] nums, int k) {
+        
+        //Base 
+        if(k == nums.length)
+            return nums;
+        
+        //Map for tracking count
+        HashMap<Integer, Integer> countMap = new HashMap<Integer, Integer>();
+        
+        //Update map
+        for(int n : nums)
+        {
+            countMap.put(n, countMap.getOrDefault(n, 0) + 1);
+        }
+        
+        //PriorityQueue with more on top
+        PriorityQueue<Integer> pq = new PriorityQueue<Integer>((n1, n2) -> countMap.get(n1) - countMap.get(n2));
+        
+        //Update queue
+        for(int n : countMap.keySet())
+        {
+            pq.offer(n);
+            
+            //Main k length of queue
+            if(pq.size() > k)
+                pq.poll();
+        }
+        
+        int[] topElements = new int[k];
+        for(int i = k - 1; i >= 0; i--)
+        {
+            topElements[i] = pq.poll();
+        }
+        
+        return topElements;
+    }
+
+
+TOP K FREQUENT WORDS
+--------------------
+public List<String> topKFrequent(String[] words, int k) {
+        
+        List<String> result = new ArrayList<String>();
+        
+        //Map
+        HashMap<String, Integer> countMap = new HashMap<String, Integer>();
+        
+        //Build map
+        for(String word : words)
+        {
+            countMap.put(word, countMap.getOrDefault(word, 0) + 1);
+        }
+        
+        //Heap 
+        Queue<String> pq = new PriorityQueue<String>(
+            (w1, w2) -> countMap.get(w1).equals(countMap.get(w2)) ? 
+            w2.compareTo(w1) : countMap.get(w1) - countMap.get(w2));
+        
+        //Build heap
+        for(String word : countMap.keySet())
+        {
+            pq.offer(word);
+            if(pq.size() > k)
+                pq.poll();
+        }
+        
+        //Build result
+        while(!pq.isEmpty())
+        {
+            result.add(pq.poll());
+        }
+        
+        Collections.reverse(result);
+        
+        return result;
+    }
+ 
+K CLOSEST POINT TO ORIGIN
+-------------------------
+public int[][] kClosest(int[][] points, int K) {
+        
+        //Queue
+        PriorityQueue<int[]> pq = new PriorityQueue<int[]>(
+        (p1, p2) -> p2[0] * p2[0] + p2[1] * p2[1] - p1[0] * p1[0] - p1[1] * p1[1]);
+        
+        //Build queue
+        for(int[] p : points)
+        {
+            pq.offer(p);
+            if(pq.size() > K)
+                pq.poll();
+        }
+        
+        //Build result
+        int[][] kClose = new int[K][2];
+        while (K > 0) 
+        {
+            kClose[--K] = pq.poll();
+        }
+        
+        return kClose;
+    }
+
+KTH LARGEST IN ARRAY
+--------------------
+public int findKthLargest(int[] nums, int k) {
+        
+        //PriorityQueue
+        PriorityQueue<Integer> pq = new PriorityQueue<Integer>((n1, n2) -> n1 - n2);
+        
+        //Build queue
+        for(int n : nums)
+        {
+            pq.offer(n);
+            if(pq.size() > k)
+                pq.poll();
+        }
+        
+        return pq.peek();
+    }
