@@ -1,0 +1,122 @@
+TWO SUM
+-------
+
+class Solution {
+    public int[] twoSum(int[] nums, int target) {
+        
+        HashMap<Integer, Integer> map = new HashMap<>();
+        
+        for(int i = 0; i < nums.length; i++)
+        {
+            int complement = target - nums[i];
+            if(map.containsKey(complement))
+                return new int[] {map.get(complement), i};
+            map.put(nums[i], i);
+        }
+        
+        return new int[] { -1, -1 };
+    }
+}
+
+TWO SUM - SORTED
+----------------
+
+class Solution {
+    public int[] twoSum(int[] numbers, int target) {
+     
+        int low = 0;
+        int high = numbers.length - 1;
+        
+        while(low < high)
+        {
+            int sum = numbers[low] + numbers[high];
+            if(sum == target)
+                return new int[] {low+1, high+1};
+            else if(sum < target)
+                low++;
+            else
+                high--;
+        }
+        
+        return new int[] {-1, -1};
+    }
+}
+
+
+TWO SUM - BST
+-------------
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public boolean findTarget(TreeNode root, int k) {
+        
+        Set<Integer> set = new HashSet<>();
+        return help(root, k, set);
+    }
+    
+    public boolean help(TreeNode root, int k, Set<Integer> set)
+    {
+        if(root == null)
+            return false;
+        if(set.contains(k - root.val))
+            return true;
+        set.add(root.val);
+        return help(root.left, k, set) || help(root.right, k, set);
+    }
+}
+
+
+THREE SUM
+---------
+
+class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+        
+        List<List<Integer>> result = new ArrayList<>();
+        Arrays.sort(nums);
+        int len = nums.length;
+        
+        for(int i = 0; i < len - 2; i++)
+        {
+            if(i == 0 || i > 0 && nums[i] != nums[i-1])
+            {
+                int low = i+1;
+                int high = len-1;
+                int sum = 0 - nums[i];
+
+                while(low < high)
+                {
+                    if(nums[low] + nums[high] == sum)
+                    {
+                       result.add(Arrays.asList(nums[i], nums[low], nums[high]));
+                        while(low < high && nums[low] == nums[low+1])
+                            low++;
+                        while(low < high && nums[high] == nums[high-1])
+                            high--;
+                        low++;
+                        high--; 
+                    }    
+                    else if(nums[low] + nums[high] < sum)
+                        low++;
+                    else
+                        high--;
+                }
+            }
+        }
+        return result;
+    }
+}
